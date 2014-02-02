@@ -23,9 +23,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 
 public class GameEngine extends JPanel implements ActionListener, MouseListener, KeyListener{
@@ -35,11 +34,12 @@ public class GameEngine extends JPanel implements ActionListener, MouseListener,
 	private static final int windowHeight = 500;
 	private static final int windowWidth = 500;
 	JFrame parent;
-
 	
 	private World world = new World(windowHeight, windowWidth); 
 	Person selectedPerson;
 	Object selectedObject;
+	
+	BufferedImage bg;
 	 
 	int counter = 0;
 
@@ -53,8 +53,6 @@ public class GameEngine extends JPanel implements ActionListener, MouseListener,
 	public GameEngine(JFrame sup) {
 		parent = sup;
 		initialize();
-
-
 	}
 
 	/** 
@@ -64,8 +62,24 @@ public class GameEngine extends JPanel implements ActionListener, MouseListener,
 	{ 
 		parent.setSize(windowWidth, windowHeight);
 		parent.setResizable(false);
+		try {
+			loadGraphics();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		Person p = new Person(world);
+		Person a = new Person(world);
+		a.setX(60); a.setY(60);
+		Item t = new Item();
+		Item d =new Item ();
+		Item b = new Item ();
+		Item y = new Item();
 		world.addPerson(p,50,50);
+		world.addPerson(a,60,60);
+		world.addItem(t, 2, 90, 360);
+		world.addItem(d, 2, 72, 360);
+		world.addItem(b, 2, 56, 360);
+		world.addItem(y, 2, 56, 344);
 		addMouseListener(this);
 		addKeyListener(this);
 		setFocusable(true);
@@ -171,13 +185,18 @@ public class GameEngine extends JPanel implements ActionListener, MouseListener,
 		super.paintComponent(g1);
 		Graphics2D g = (Graphics2D) g1;
 
-		g.setColor(Color.WHITE); 
-		g.fillRect(0, 0, windowWidth, windowHeight); 
 
+		g.drawImage(bg,0,0,this);
+		g.setColor(new Color(0.2F,0.4F,0.9F,1.0F));
+		g.fillRect(0, 380, windowWidth, 120); 
+		
 		for (Person p : world.people) {
 			g.drawImage(p.images.get(p.isFacing().toString()),p.getX(),p.getY(), parent);
+			g.setColor(Color.BLUE);
 		}
-
+		for (Item i : world.items){
+			g.drawImage(i.getImage(i.isFacing().toString()),i.getX(),i.getY(),parent);
+		}
 		if (selectedPerson != null) {
 			paintNeeds(g);
 		}
@@ -187,9 +206,11 @@ public class GameEngine extends JPanel implements ActionListener, MouseListener,
 	public void paintNeeds(Graphics2D g) {
 		int i = 0; String str = "" ;
 		double n = 0;
+		g.setColor(Color.WHITE);
+		g.drawString(selectedPerson.getName(), 20,395);
 
 		while (i < 9) {
-			int x = 100; int y = 400; int z = 20;
+			int x = 100; int y = 410; int z = 20;
 			switch(i) {
 			case 1: 
 				n = selectedPerson.getHunger();
@@ -252,6 +273,9 @@ public class GameEngine extends JPanel implements ActionListener, MouseListener,
 		}
 	}
 
+	public void loadGraphics() throws IOException {
+		bg = ImageIO.read(new File("grass.png"));
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {

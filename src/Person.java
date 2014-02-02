@@ -1,4 +1,5 @@
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.File;
 import javax.imageio.*;
@@ -28,13 +29,14 @@ public class Person implements WorldObject {
 	private int walkX = -1;
 	private int walkY = -1;
 	private int steps = 0;
+	private int ID;
 	private LinkedList<String> actions = new LinkedList<String>();
-	HashMap<String,Image> images = new HashMap<String,Image>();
+	HashMap<String,BufferedImage> images = new HashMap<String,BufferedImage>();
 	private Direction facing;
 	
 	private World world;
 
-	public Person(int a, String nam, int ix, int iy, double b, double c,double e, double f, double h, double hy,  double s,  double sp, boolean m) {
+	public Person(int a, String nam, int ix, int iy, double b, double c,double e, double f, double h, double hy,  double s,  double sp, boolean m, int id) {
 		hunger = h;
 		fun = f;
 		social = s;
@@ -48,6 +50,7 @@ public class Person implements WorldObject {
 		name = nam;
 		x = ix;
 		y = iy;
+		ID = id;
 
 	}
 	public Person(World w) {
@@ -72,6 +75,7 @@ public class Person implements WorldObject {
 		}
 		x = 50;
 		y = 50;
+		ID = 1;
 	}
 
 	public void loadImages() throws IOException {
@@ -81,7 +85,6 @@ public class Person implements WorldObject {
 		images.put("LEFT",ImageIO.read(new File("PLeft.png")));
 	}
 	// Variable setters
-
 	public void setHunger(double i) {
 		hunger = i;
 	}
@@ -134,7 +137,9 @@ public class Person implements WorldObject {
 		name = n;
 	}
 	// Variable getters
-
+	public int getID(){
+		return ID;
+	}
 	
 	public Direction isFacing(){
 		return facing;

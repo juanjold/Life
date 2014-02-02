@@ -10,6 +10,7 @@ public class World {
 	private WorldObject[][] level2;
 	private WorldObject[][] level3;
 	HashSet<Person> people = new HashSet<Person>();
+	HashSet<Item> items = new HashSet<Item>();
 	private int width;
 	private int height;
 
@@ -40,7 +41,6 @@ public class World {
 
 	public WorldObject getAround(int i, int x, int y, JPanel f){
 		WorldObject[][] level = getLevel(i);
-		Graphics2D g = (Graphics2D) f.getGraphics();
 		for (int ix = x - 5; ix <= x + 5 && ix < width ; ix++){
 			if (ix < 0) { ix = 0; }
 			for (int iy = y - 5; iy <= y + 5 && iy < height; iy++) {
@@ -90,6 +90,17 @@ public class World {
 			p.setY(y);
 			return true;
 		} else return false;
+	}
+	
+	public boolean addItem(Item i, int level, int x, int y) {
+		if(!collide(level, x,y)){
+			if(!items.contains(i)) { items.add(i);}
+			put(level,i,x,y);
+			i.setX(x);
+			i.setY(y);
+			return true;
+		}
+		return false;
 	}
 
 	public void remove(WorldObject w) {

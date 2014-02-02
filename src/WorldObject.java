@@ -6,4 +6,6 @@ public interface WorldObject {
 	public int getY();
 	public boolean inPos(int x, int y);
 	public int level();
+	public Direction isFacing();
+	
 }
